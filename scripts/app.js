@@ -2,11 +2,18 @@
 
 angular.module("ender", [])
     .config(["$routeProvider", "$locationProvider", function ($routeProvider, $locationProvider) {
-        $locationProvider.html5Mode(false);
+        //$locationProvider.html5Mode(false);
         
         $routeProvider.when("/", {
-            controller: MainController,
             templateUrl: "partials/intro.html"
         })
-        .otherwise({ redirectTo: "/" });
+        .when("/code", {
+            templateUrl: "partials/code.html"
+        })
+        .when("/contact", {
+            templateUrl: "partials/contact.html"
+        })
+        .otherwise({ 
+        	redirectTo: "/" 
+        });
     }]);

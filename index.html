@@ -5,39 +5,47 @@
 	    <meta name="description" content="" />
 	    <meta name="author" content="Bryan Allred" />
 
-    	<title>Experiment</title>
+    	<title>EndersPsyche.com</title>
 		<link href="//plus.google.com/112949321083048638287" rel="publisher" />
 		<link type="text/css" href="styles/site.css" rel="stylesheet" />
 		<script type="text/javascript" src="scripts/lib/modernizr.js"></script>
 	</head>
 	<body>
+		<!-- Cool graphic -->
 		<canvas id="displayCanvas" width="1024px" height="576px">
 			Your browser does not support HTML5 canvas.
 		</canvas>
 		
 		<header id="menu">
+			<!-- Basic navigation menu -->
 			<nav>
-				<span class="bracket left">[</span><a class="hyper" href="http://blog.enderspsyche.com" title="">blog</a><span class="bracket right">]</span>
-				<span class="bracket left">[</span><a class="hyper" href="/code" title="">code</a><span class="bracket right">]</span>
-				<span class="bracket left">[</span><a class="hyper" href="/contact" title="">contact</a><span class="bracket right">]</span>
+				<a href="#/" title="home">home</a>
+				<a href="#/code" title="code">code</a>
+				<a href="http://blog.enderspsyche.com" title="blog">blog</a>
+				<a href="#/contact" title="contact">contact</a>
 			</nav>
 		</header>
 
-		<div id="container" ng-view></div>
+		<div id="container">
+			<!-- Where the magic happens -->
+			<div ng-view></div>
 
-		<footer>
-			<span>&copy;2008 - 2013 All Rights Reserved (unless otherwise noted)</span>
+			<!-- Copyright information -->
+			<div class="copyright">
+				<span>&copy; 2008 - 2013 All Rights Reserved (unless otherwise noted)</span>
 
-            <span class="bracket left">[</span><a class="hyper" href="//twitter.com/#!/bmallred" title="Twitter - &amp;bmallred">Twitter</a><span class="bracket right">]</span>
-            <span class="bracket left">[</span><a class="hyper" href="//plus.google.com/112949321083048638287" title="Goolgle Plus">Google&#43;</a><span class="bracket right">]</span>
-            <span class="bracket left">[</span><a class="hyper" href="mailto:admin@enderspsyche.com" title="Email">Email</a><span class="bracket right">]</span>
-		</footer>
+	            <a href="//twitter.com/#!/bmallred" title="Twitter - &amp;bmallred">Twitter</a>
+	            <a href="//plus.google.com/112949321083048638287" title="Goolgle Plus">Google&#43;</a>
+	            <a href="mailto:admin@enderspsyche.com" title="Email">Email</a>
+	            <br>
+	            Really cool and fascinating morphing curve &copy; Dan Gries &#64; <a href="http://rectangleworld.com/" title="Rectangle World">rectangleworld.com</a>
+			</div>
+		</div>
 
-		<script type="text/javascript" src="scripts/lib/jquery-1.8.0.min.js"></script>
+		<!-- Scripts located down under for faster load times -->
         <script type="text/javascript" src="scripts/lib/angular.min.js"></script>
         <script type="text/javascript" src="scripts/lib/angular-resource-1.0.1.min.js"></script>
         <script type="text/javascript" src="scripts/morphing.js"></script>
-        <script type="text/javascript" src="scripts/controllers.js"></script>
         <script type="text/javascript" src="scripts/app.js"></script>
 	</body>
 </html>

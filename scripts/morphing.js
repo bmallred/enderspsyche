@@ -1,4 +1,14 @@
-window.addEventListener("load", windowLoadHandler, false);
+// Bind event to handle the differences between IE and others.
+function bindEvent(el, eventName, eventHandler) {
+	if (el.addEventListener){
+		el.addEventListener(eventName, eventHandler, false); 
+	} 
+	else if (el.attachEvent){
+		el.attachEvent('on'+eventName, eventHandler);
+	}
+}
+
+bindEvent(window, "load", windowLoadHandler);
 
 // For debug messages while testing code
 var Debugger = function() { };

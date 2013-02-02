@@ -13,6 +13,9 @@ angular.module("ender", [])
         .when("/contact", {
             templateUrl: "partials/contact.html"
         })
+        .when("/credits", {
+            templateUrl: "partials/credits.html"
+        })
         .otherwise({ 
         	redirectTo: "/" 
         });

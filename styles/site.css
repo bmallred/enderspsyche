@@ -16,23 +16,6 @@ header
 	padding: 1em;
 }
 
-.bracket
-{
-	color: #666;
-}
-
-.bracket.left
-{
-	margin-left: 0.5em;
-	margin-right: 0.5em;
-}
-
-.bracket.right
-{
-	margin-left: 0.5em;
-	margin-right: 0.5em;
-}
-
 a,
 a:link,
 a:visited
@@ -58,6 +41,7 @@ a:before
 a img
 {
 	vertical-align: middle;
+	border: none;
 }
 
 a:after
@@ -67,6 +51,12 @@ a:after
 	margin-left: 0.5em;
 	margin-right: 0.5em;
 	color: #666;
+}
+
+img
+{
+	width: 64px;
+	height: 64px;
 }
 
 #displayCanvas
@@ -104,5 +94,5 @@ a:after
 
 .icons a
 {
-	margin: 1em 2em;
+	margin: 1em;
 }

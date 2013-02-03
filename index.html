@@ -8,13 +8,26 @@
     	<title>EndersPsyche.com</title>
 		<link href="//plus.google.com/112949321083048638287" rel="publisher" />
 		<link type="text/css" href="styles/site.css" rel="stylesheet" />
+		<!--[if lt IE 9]>
+		<style type="">
+			#browser
+			{
+				display: block;
+				visibility: visible;
+			}
+		</style>
+		<![endif]-->
 		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
 	</head>
 	<body>
+		<!-- Warning to upgrade the browser -->
+		<div id="browser">
+			<h2>Dude, you are missing are the cool stuff!</h2>
+			<p>We recommend upgrading to the latest <a href="//ie.microsoft.com" title="Microsoft Internet Explorer">Internet Explorer</a>, <a href="//chrome.google.com" title="Google Chrome">Google Chrome</a>, or <a href="//mozilla.org/firefox" title="Firefox">Firefox</a>. If you are using IE 9 or later, make sure you turn off "Compatibility View".</p>
+		</div>
+
 		<!-- Cool graphic -->
-		<canvas id="displayCanvas" width="1024px" height="576px">
-			Your browser does not support HTML5 canvas.
-		</canvas>
+		<canvas id="displayCanvas" width="1024" height="576"></canvas>
 		
 		<header id="menu">
 			<!-- Basic navigation menu -->

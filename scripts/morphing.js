@@ -1,10 +1,10 @@
 // Bind event to handle the differences between IE and others.
 function bindEvent(el, eventName, eventHandler) {
-	if (el.addEventListener){
+	if (el.addEventListener) {
 		el.addEventListener(eventName, eventHandler, false); 
 	} 
-	else if (el.attachEvent){
-		el.attachEvent('on'+eventName, eventHandler);
+	else if (el.attachEvent) {
+		el.attachEvent('on' + eventName, eventHandler);
 	}
 }
 
@@ -25,8 +25,26 @@ function windowLoadHandler() {
 	canvasApp();
 }
 
+var G_vmlCanvasManager;
+function excanvasSupport() {
+	if (G_vmlCanvasManager === undefined) {
+		return false;
+	}
+
+	return true;
+}
+
 function canvasSupport() {
-	return Modernizr.canvas;
+	return Modernizr.canvas || excanvasSupport();
+}
+
+function getContext(el, mode) {
+	// For IE 8 and below.
+	if (excanvasSupport()) {
+		G_vmlCanvasManager.initElement(el);
+	}
+
+	return el.getContext(mode);
 }
 
 function canvasApp() {
@@ -35,15 +53,17 @@ function canvasApp() {
 	}
 	
 	var displayCanvas = document.getElementById("displayCanvas");
-	var context = displayCanvas.getContext("2d");
-	var displayWidth = displayCanvas.width;
-	var displayHeight = displayCanvas.height;
+	var context = /*getContext(displayCanvas, "2d");*/ displayCanvas.getContext("2d");
+	var displayWidth = parseInt(displayCanvas.width);
+	var displayHeight = parseInt(displayCanvas.height);
 	
+	/*
 	// Off screen canvas used only when exporting image
 	var exportCanvas = document.createElement('canvas');
 	exportCanvas.width = displayWidth;
 	exportCanvas.height = displayHeight;
-	var exportCanvasContext = exportCanvas.getContext("2d");
+	var exportCanvasContext = getContext(exportCanvas, "2d"); // exportCanvas.getContext("2d");
+	*/
 
 	var numCircles;
 	var maxMaxRad;
@@ -55,7 +75,7 @@ function canvasApp() {
 	var drawsPerFrame;
 	var drawCount;
 	var bgColor,urlColor;
-	var TWO_PI = 2*Math.PI;
+	var TWO_PI = 2 * Math.PI;
 	var lineWidth;
 	
 	init();
@@ -94,44 +114,45 @@ function canvasApp() {
 	
 	function startGenerate() {
 		drawCount = 0;
-		context.setTransform(1,0,0,1,0,0);
-		
-		context.clearRect(0,0,displayWidth,displayHeight);
-		
+		context.setTransform(1, 0, 0, 1, 0, 0);
+		context.clearRect(0, 0, displayWidth, displayHeight);
 		setCircles();
 		
-		if(timer) {clearInterval(timer);}
-		timer = setInterval(onTimer,1000/50);
+		if (timer) {
+			clearInterval(timer);
+		}
+
+		timer = setInterval(onTimer, 1000 / 50);
 	}
 	
 	function setCircles() {
 		var i;
-		var r,g,b,a;
+		var r, g, b, a;
 		var maxR, minR;
 		var grad;
 		
 		circles = [];
 		
 		for (i = 0; i < numCircles; i++) {
-			maxR = minMaxRad+Math.random()*(maxMaxRad-minMaxRad);
-			minR = minRadFactor*maxR;
+			maxR = minMaxRad + Math.random() * (maxMaxRad - minMaxRad);
+			minR = minRadFactor * maxR;
 			
 			// Define gradient
-			grad = context.createRadialGradient(0,0,minR,0,0,maxR);
+			grad = context.createRadialGradient(0, 0, minR, 0, 0, maxR);
 			grad.addColorStop(1, "rgba(0,170,200,0.2)");
 			grad.addColorStop(0, "rgba(0,20,170,0.2)");
 			
 			var newCircle = {
 				centerX: -maxR,
-				centerY: displayHeight/2-50,
+				centerY: displayHeight / 2 - 50,
 				maxRad : maxR,
 				minRad : minR,
 				color: grad, // Can set a gradient or solid color here.
 				//fillColor: "rgba(0,0,0,1)",
 				param : 0,
-				changeSpeed : 1/250,
-				phase : Math.random()*TWO_PI, // The phase to use for a single fractal curve.
-				globalPhase: Math.random()*TWO_PI // The curve as a whole will rise and fall by a sinusoid.
+				changeSpeed : 1 / 250,
+				phase : Math.random() * TWO_PI, // The phase to use for a single fractal curve.
+				globalPhase: Math.random() * TWO_PI // The curve as a whole will rise and fall by a sinusoid.
 			};
 
 			circles.push(newCircle);
@@ -141,32 +162,31 @@ function canvasApp() {
 	}
 	
 	function onTimer() {
-		var i,j;
+		var i, j;
 		var c;
 		var rad;
-		var point1,point2;
-		var x0,y0;
+		var point1, point2;
+		var x0, y0;
 		var cosParam;
-		
 		var xSqueeze = 0.75; // Cheap 3D effect by shortening in x direction.
-		
 		var yOffset;
 		
 		// Draw circles
 		for (j = 0; j < drawsPerFrame; j++) {
-			
 			drawCount++;
 			
 			for (i = 0; i < numCircles; i++) {
 				c = circles[i];
 				c.param += c.changeSpeed;
+
 				if (c.param >= 1) {
 					c.param = 0;
 					
 					c.pointList1 = c.pointList2;
 					c.pointList2 = setLinePoints(iterations);
 				}
-				cosParam = 0.5-0.5*Math.cos(Math.PI*c.param);
+
+				cosParam = 0.5 - 0.5 * Math.cos(Math.PI * c.param);
 				
 				context.strokeStyle = c.color;
 				context.lineWidth = lineWidth;
@@ -179,12 +199,12 @@ function canvasApp() {
 				c.phase += 0.0002;
 				
 				theta = c.phase;
-				rad = c.minRad + (point1.y + cosParam*(point2.y-point1.y))*(c.maxRad - c.minRad);
+				rad = c.minRad + (point1.y + cosParam * (point2.y - point1.y)) * (c.maxRad - c.minRad);
 				
 				// Move center
 				c.centerX += 0.5;
 				c.centerY += 0.04;
-				yOffset = 40*Math.sin(c.globalPhase + drawCount/1000*TWO_PI);
+				yOffset = 40 * Math.sin(c.globalPhase + drawCount / 1000 * TWO_PI);
 				
 				// Stop when off screen
 				if (c.centerX > displayWidth + maxMaxRad) {
@@ -193,22 +213,24 @@ function canvasApp() {
 				}			
 				
 				// We are drawing in new position by applying a transform. We are doing this so the gradient will move with the drawing.
-				context.setTransform(xSqueeze,0,0,1,c.centerX,c.centerY+yOffset)
+				context.setTransform(xSqueeze, 0, 0, 1, c.centerX, c.centerY + yOffset)
 				
 				// Drawing the curve involves stepping through a linked list of points defined by a fractal subdivision process.
 				// It is like drawing a circle, except with varying radius.
-				x0 = xSqueeze*rad*Math.cos(theta);
-				y0 = rad*Math.sin(theta);
+				x0 = xSqueeze * rad * Math.cos(theta);
+				y0 = rad * Math.sin(theta);
 				context.lineTo(x0, y0);
+
 				while (point1.next != null) {
 					point1 = point1.next;
 					point2 = point2.next;
-					theta = TWO_PI*(point1.x + cosParam*(point2.x-point1.x)) + c.phase;
-					rad = c.minRad + (point1.y + cosParam*(point2.y-point1.y))*(c.maxRad - c.minRad);
-					x0 = xSqueeze*rad*Math.cos(theta);
-					y0 = rad*Math.sin(theta);
+					theta = TWO_PI * (point1.x + cosParam * (point2.x - point1.x)) + c.phase;
+					rad = c.minRad + (point1.y + cosParam * (point2.y - point1.y)) * (c.maxRad - c.minRad);
+					x0 = xSqueeze * rad * Math.cos(theta);
+					y0 = rad * Math.sin(theta);
 					context.lineTo(x0, y0);
 				}
+
 				context.closePath();
 				context.stroke();
 				//context.fill();
@@ -219,8 +241,8 @@ function canvasApp() {
 	// Here is the function that defines a noisy (but not wildly varying) data set which we will use to draw the curves.
 	function setLinePoints(iterations) {
 		var pointList = {};
-		pointList.first = {x:0, y:1};
-		var lastPoint = {x:1, y:1}
+		pointList.first = { x:0, y:1 };
+		var lastPoint = { x:1, y:1 }
 		var minY = 1;
 		var maxY = 1;
 		var point;
@@ -233,15 +255,16 @@ function canvasApp() {
 		pointList.first.next = lastPoint;
 		for (var i = 0; i < iterations; i++) {
 			point = pointList.first;
+
 			while (point.next != null) {
 				nextPoint = point.next;
 				
 				dx = nextPoint.x - point.x;
-				newX = 0.5*(point.x + nextPoint.x);
-				newY = 0.5*(point.y + nextPoint.y);
-				newY += dx*(Math.random()*2 - 1);
+				newX = 0.5 * (point.x + nextPoint.x);
+				newY = 0.5 * (point.y + nextPoint.y);
+				newY += dx * (Math.random()*2 - 1);
 				
-				var newPoint = {x:newX, y:newY};
+				var newPoint = { x:newX, y:newY };
 				
 				// min, max
 				if (newY < minY) {
@@ -254,23 +277,24 @@ function canvasApp() {
 				// Put between points
 				newPoint.next = nextPoint;
 				point.next = newPoint;
-				
 				point = nextPoint;
 			}
 		}
 		
 		// Normalize to values between 0 and 1
 		if (maxY != minY) {
-			var normalizeRate = 1/(maxY - minY);
+			var normalizeRate = 1 / (maxY - minY);
 			point = pointList.first;
+
 			while (point != null) {
-				point.y = normalizeRate*(point.y - minY);
+				point.y = normalizeRate * (point.y - minY);
 				point = point.next;
 			}
 		}
 		else {
 			// Unlikely that max = min, but could happen if using zero iterations. In this case, set all points equal to 1.
 			point = pointList.first;
+
 			while (point != null) {
 				point.y = 1;
 				point = point.next;
@@ -279,14 +303,15 @@ function canvasApp() {
 		
 		return pointList;		
 	}
-		
+	
+	/*	
 	function exportPressed(evt) {
 		// Background - otherwise background will be transparent.
 		exportCanvasContext.fillStyle = bgColor;
-		exportCanvasContext.fillRect(0,0,displayWidth,displayHeight);
+		exportCanvasContext.fillRect(0, 0, displayWidth, displayHeight);
 		
 		// Draw
-		exportCanvasContext.drawImage(displayCanvas, 0,0,displayWidth,displayHeight,0,0,displayWidth,displayHeight);
+		exportCanvasContext.drawImage(displayCanvas, 0, 0, displayWidth, displayHeight, 0, 0, displayWidth, displayHeight);
 		
 		// Add printed url to image
 		exportCanvasContext.fillStyle = urlColor;
@@ -301,7 +326,7 @@ function canvasApp() {
 		var dataURL = exportCanvas.toDataURL("image/png");
 		
 		// Open a new window of appropriate size to hold the image:
-		var imageWindow = window.open("", "fractalLineImage", "left=0,top=0,width="+displayWidth+",height="+displayHeight+",toolbar=0,resizable=0");
+		var imageWindow = window.open("", "fractalLineImage", "left=0,top=0,width=" + displayWidth + ",height=" + displayHeight + ",toolbar=0,resizable=0");
 		
 		// Write some html into the new window, creating an empty image:
 		imageWindow.document.write("<title>Export Image</title>")
@@ -316,6 +341,7 @@ function canvasApp() {
 		var exportImage = imageWindow.document.getElementById("exportImage");
 		exportImage.src = dataURL;
 	}
+	*/
 	
 	function regeneratePressed(evt) {
 		startGenerate();
